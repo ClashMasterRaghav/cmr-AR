@@ -85,7 +85,7 @@ export class AppWindow {
 				<h3 class="app-window-title">${this.title}</h3>
 				<div class="app-window-controls">
 					<button class="app-window-maximize">◻</button>
-					<button class="app-window-close">×</button>
+					<button class="app-window-close">X</button>
 				</div>
 			</div>
 			<div class="app-window-content" style="height: calc(100% - 30px); overflow: hidden;">

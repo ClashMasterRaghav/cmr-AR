@@ -22,17 +22,77 @@ export class AppDrawer {
 	}
 
 	createDrawer() {
-		// Create floating button
+		// Create floating button with more explicit positioning
 		this.floatingButton = document.createElement('div');
 		this.floatingButton.className = 'floating-app-button';
 		this.floatingButton.innerHTML = '📱';
-		this.floatingButton.addEventListener('click', () => this.toggleDrawer());
+		this.floatingButton.style.cssText = `
+			position: fixed !important;
+			top: 20px !important;
+			right: 20px !important;
+			width: 60px !important;
+			height: 60px !important;
+			background: rgba(79, 195, 247, 0.95) !important;
+			border-radius: 50% !important;
+			display: flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			font-size: 24px !important;
+			cursor: pointer !important;
+			z-index: 999999 !important;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+			transition: all 0.3s ease !important;
+			backdrop-filter: blur(10px) !important;
+			border: 2px solid rgba(255, 255, 255, 0.3) !important;
+			pointer-events: auto !important;
+			user-select: none !important;
+			-webkit-user-select: none !important;
+			-moz-user-select: none !important;
+			-ms-user-select: none !important;
+		`;
+		
+		this.floatingButton.addEventListener('click', () => {
+			console.log('Floating button clicked!');
+			this.toggleDrawer();
+		});
+		
 		document.body.appendChild(this.floatingButton);
-		console.log('Floating button created');
+		console.log('Floating button created and appended to body');
+		
+		// Verify the button is actually in the DOM
+		setTimeout(() => {
+			const buttonInDOM = document.querySelector('.floating-app-button');
+			if (buttonInDOM) {
+				console.log('✅ Floating button found in DOM');
+				console.log('Button position:', buttonInDOM.getBoundingClientRect());
+				console.log('Button computed style:', window.getComputedStyle(buttonInDOM));
+			} else {
+				console.log('❌ Floating button NOT found in DOM');
+			}
+		}, 100);
 
-		// Create app drawer
+		// Create app drawer with more explicit positioning
 		this.drawerElement = document.createElement('div');
 		this.drawerElement.className = 'app-drawer';
+		this.drawerElement.style.cssText = `
+			position: fixed !important;
+			top: 0 !important;
+			right: -400px !important;
+			width: 380px !important;
+			height: 100vh !important;
+			background: rgba(40, 40, 40, 0.95) !important;
+			backdrop-filter: blur(20px) !important;
+			border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+			z-index: 999998 !important;
+			transition: right 0.3s ease !important;
+			overflow-y: auto !important;
+			pointer-events: auto !important;
+			user-select: none !important;
+			-webkit-user-select: none !important;
+			-moz-user-select: none !important;
+			-ms-user-select: none !important;
+		`;
+		
 		this.drawerElement.innerHTML = `
 			<div class="app-drawer-header">
 				<h3>Apps</h3>
@@ -49,7 +109,7 @@ export class AppDrawer {
 			</div>
 		`;
 		document.body.appendChild(this.drawerElement);
-		console.log('App drawer created');
+		console.log('App drawer created and appended to body');
 
 		// Add event listeners
 		this.drawerElement.querySelector('.close-drawer').addEventListener('click', () => this.closeDrawer());
@@ -81,6 +141,7 @@ export class AppDrawer {
 
 	openDrawer() {
 		this.isOpen = true;
+		this.drawerElement.style.right = '0px !important';
 		this.drawerElement.classList.add('app-drawer-open');
 		this.floatingButton.classList.add('floating-app-button-active');
 		console.log('App drawer opened');
@@ -88,6 +149,7 @@ export class AppDrawer {
 
 	closeDrawer() {
 		this.isOpen = false;
+		this.drawerElement.style.right = '-400px !important';
 		this.drawerElement.classList.remove('app-drawer-open');
 		this.floatingButton.classList.remove('floating-app-button-active');
 		console.log('App drawer closed');

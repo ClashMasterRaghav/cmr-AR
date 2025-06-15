@@ -27,6 +27,40 @@ export function initMain(cameraRef, rendererRef) {
 	renderer.xr.addEventListener('sessionend', onSessionEnd);
 	
 	console.log('Main initialized, waiting for AR session...');
+	
+	// Create a test button to verify positioning
+	createTestButton();
+}
+
+// Create a test button to verify positioning
+function createTestButton() {
+	const testButton = document.createElement('div');
+	testButton.innerHTML = '🧪 TEST';
+	testButton.style.cssText = `
+		position: fixed !important;
+		top: 100px !important;
+		right: 20px !important;
+		width: 80px !important;
+		height: 40px !important;
+		background: red !important;
+		color: white !important;
+		border-radius: 8px !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		font-size: 12px !important;
+		cursor: pointer !important;
+		z-index: 999999 !important;
+		pointer-events: auto !important;
+	`;
+	
+	testButton.addEventListener('click', () => {
+		console.log('Test button clicked!');
+		alert('Test button works! If you can see this, positioning is fine.');
+	});
+	
+	document.body.appendChild(testButton);
+	console.log('Test button created');
 }
 
 // Handle AR session start
@@ -46,6 +80,18 @@ function onSessionStart() {
 			console.log('Recreating app drawer due to missing floating button');
 			appDrawer.destroy();
 			appDrawer = new AppDrawer();
+		}
+		
+		// Check if floating button exists and is visible
+		const floatingButton = document.querySelector('.floating-app-button');
+		if (floatingButton) {
+			console.log('✅ Floating button exists in DOM');
+			const rect = floatingButton.getBoundingClientRect();
+			console.log('Button rect:', rect);
+			console.log('Button visible:', rect.width > 0 && rect.height > 0);
+			console.log('Button style:', window.getComputedStyle(floatingButton));
+		} else {
+			console.log('❌ Floating button not found in DOM');
 		}
 	}, 1000);
 }
