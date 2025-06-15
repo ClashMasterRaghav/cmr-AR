@@ -27,7 +27,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: '/ar_web.html'
+    open: '/ar_web_dev.html'
   },
   optimizeDeps: {
     include: ['three']
