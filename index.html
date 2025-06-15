@@ -57,7 +57,23 @@
 
 				//
 
-				const arButton = ARButton.createButton( renderer );
+				// Create a container for AR UI elements
+				const arUIContainer = document.createElement('div');
+				arUIContainer.id = 'ar-ui-container';
+				arUIContainer.style.cssText = `
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100vw;
+					height: 100vh;
+					pointer-events: none;
+					z-index: 999999;
+				`;
+				document.body.appendChild(arUIContainer);
+
+				const arButton = ARButton.createButton( renderer, {
+					domOverlay: { root: arUIContainer }
+				} );
 				document.body.appendChild( arButton );
 
 				// Add click listener to AR button to ensure app drawer is created
