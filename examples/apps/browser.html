@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            background: #e74c3c;
+            font-family: Arial, sans-serif;
+            color: white;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .browser-app {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            height: calc(100% - 30px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .address-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .url-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .url-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .browser-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .quick-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-link {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .quick-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .welcome-content {
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+        
+        .welcome-content h2 {
+            margin-bottom: 15px;
+        }
+        
+        .search-box {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-app">
+        <div class="address-bar">
+            <button class="btn" onclick="goBack()">←</button>
+            <button class="btn" onclick="goForward()">→</button>
+            <button class="btn" onclick="refresh()">🔄</button>
+            <input type="text" class="url-input" id="urlInput" placeholder="Enter URL or search..." onkeypress="handleUrlEnter(event)">
+            <button class="btn" onclick="navigate()">Go</button>
+        </div>
+        
+        <div class="quick-links">
+            <button class="quick-link" onclick="loadUrl('https://www.google.com')">Google</button>
+            <button class="quick-link" onclick="loadUrl('https://www.youtube.com')">YouTube</button>
+            <button class="quick-link" onclick="loadUrl('https://www.github.com')">GitHub</button>
+            <button class="quick-link" onclick="loadUrl('https://www.wikipedia.org')">Wikipedia</button>
+        </div>
+        
+        <div class="browser-content" id="browserContent">
+            <div class="welcome-content" id="welcomeContent">
+                <h2>🌐 Web Browser</h2>
+                <p>Enter a URL or search the web</p>
+                <input type="text" class="search-box" placeholder="Search Google..." onkeypress="handleSearch(event)">
+                <p>Or use the quick links above</p>
+            </div>
+            <iframe class="iframe-container" id="webFrame" style="display: none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let currentUrl = '';
+        let history = [];
+        let historyIndex = -1;
+
+        function loadUrl(url) {
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            currentUrl = url;
+            addToHistory(url);
+            
+            const frame = document.getElementById('webFrame');
+            const welcome = document.getElementById('welcomeContent');
+            
+            frame.src = url;
+            frame.style.display = 'block';
+            welcome.style.display = 'none';
+            
+            document.getElementById('urlInput').value = url;
+        }
+
+        function navigate() {
+            const url = document.getElementById('urlInput').value.trim();
+            if (url) {
+                loadUrl(url);
+            }
+        }
+
+        function handleUrlEnter(event) {
+            if (event.key === 'Enter') {
+                navigate();
+            }
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (query) {
+                    loadUrl(`https://www.google.com/search?q=${encodeURIComponent(query)}`);
+                }
+            }
+        }
+
+        function goBack() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                loadUrlFromHistory();
+            }
+        }
+
+        function goForward() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                loadUrlFromHistory();
+            }
+        }
+
+        function refresh() {
+            if (currentUrl) {
+                loadUrl(currentUrl);
+            }
+        }
+
+        function addToHistory(url) {
+            // Remove any forward history when navigating to a new URL
+            history = history.slice(0, historyIndex + 1);
+            history.push(url);
+            historyIndex = history.length - 1;
+        }
+
+        function loadUrlFromHistory() {
+            if (historyIndex >= 0 && historyIndex < history.length) {
+                const url = history[historyIndex];
+                currentUrl = url;
+                
+                const frame = document.getElementById('webFrame');
+                const welcome = document.getElementById('welcomeContent');
+                
+                frame.src = url;
+                frame.style.display = 'block';
+                welcome.style.display = 'none';
+                
+                document.getElementById('urlInput').value = url;
+            }
+        }
+    </script>
+</body>
+</html> 

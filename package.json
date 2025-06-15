@@ -1,30 +1,21 @@
 {
-  "name": "cmr-ar",
+  "name": "cmr-ar-app-window",
   "version": "1.0.0",
-  "description": "AR Windows 7 Style Apps with TypeScript",
-  "main": "examples/dist/ar_main.js",
+  "description": "AR App Window Container with TypeScript and Vite",
+  "type": "module",
   "scripts": {
-    "build": "vite build",
-    "build:gh": "vite build",
     "dev": "vite",
+    "build": "tsc && vite build",
     "preview": "vite preview",
-    "serve": "python -m http.server 8000"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/three": "^0.160.0",
-    "vite": "^5.0.0"
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "three": "^0.160.0"
   },
-  "keywords": [
-    "ar",
-    "webxr",
-    "threejs",
-    "typescript",
-    "augmented-reality"
-  ],
-  "author": "",
-  "license": "MIT"
-} 
+  "devDependencies": {
+    "@types/three": "^0.160.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "rimraf": "^5.0.5"
+  }
+}
