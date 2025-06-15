@@ -9,13 +9,14 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./examples/dist",
     "rootDir": "./examples/src",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "types": ["three"],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noEmitOnError": true
   },
   "include": [
     "examples/src/**/*"
