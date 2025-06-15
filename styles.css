@@ -37,11 +37,12 @@ body {
 	justify-content: center;
 	font-size: 24px;
 	cursor: pointer;
-	z-index: 1000;
+	z-index: 10000;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 	transition: all 0.3s ease;
 	backdrop-filter: blur(10px);
 	border: 2px solid rgba(255, 255, 255, 0.2);
+	pointer-events: auto;
 }
 
 .floating-app-button:hover {
@@ -65,9 +66,10 @@ body {
 	background: rgba(40, 40, 40, 0.95);
 	backdrop-filter: blur(20px);
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
-	z-index: 999;
+	z-index: 9999;
 	transition: right 0.3s ease;
 	overflow-y: auto;
+	pointer-events: auto;
 }
 
 .app-drawer-open {
@@ -171,6 +173,7 @@ body {
 	position: absolute;
 	z-index: 500;
 	transition: transform 0.2s ease, box-shadow 0.3s ease;
+	pointer-events: auto;
 }
 
 .app-window-active {
@@ -180,10 +183,6 @@ body {
 
 .app-window-maximized {
 	border-radius: 0;
-}
-
-.app-window-minimizing {
-	transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
 }
 
 .app-window-header {
@@ -229,10 +228,6 @@ body {
 
 .app-window-controls button:hover {
 	background: rgba(255, 255, 255, 0.1);
-}
-
-.app-window-minimize:hover {
-	background: rgba(255, 193, 7, 0.2);
 }
 
 .app-window-maximize:hover {

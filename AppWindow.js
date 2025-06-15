@@ -29,7 +29,6 @@ export class AppWindow {
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 		this.handleMouseDown = this.handleMouseDown.bind(this);
 		this.handleResizeMouseDown = this.handleResizeMouseDown.bind(this);
-		this.handleMinimize = this.handleMinimize.bind(this);
 		this.handleMaximize = this.handleMaximize.bind(this);
 		this.handleWindowClick = this.handleWindowClick.bind(this);
 		this.handleHeaderDoubleClick = this.handleHeaderDoubleClick.bind(this);
@@ -85,7 +84,6 @@ export class AppWindow {
 			<div class="app-window-header">
 				<h3 class="app-window-title">${this.title}</h3>
 				<div class="app-window-controls">
-					<button class="app-window-minimize">–</button>
 					<button class="app-window-maximize">◻</button>
 					<button class="app-window-close">×</button>
 				</div>
@@ -119,14 +117,12 @@ export class AppWindow {
 	
 	addEventListeners() {
 		const header = this.windowElement.querySelector('.app-window-header');
-		const minimizeBtn = this.windowElement.querySelector('.app-window-minimize');
 		const maximizeBtn = this.windowElement.querySelector('.app-window-maximize');
 		const closeBtn = this.windowElement.querySelector('.app-window-close');
 		const resizeHandle = this.windowElement.querySelector('.resize-handle');
 		
 		header.addEventListener('mousedown', this.handleMouseDown);
 		header.addEventListener('dblclick', this.handleHeaderDoubleClick);
-		minimizeBtn.addEventListener('click', this.handleMinimize);
 		maximizeBtn.addEventListener('click', this.handleMaximize);
 		closeBtn.addEventListener('click', () => this.close());
 		resizeHandle.addEventListener('mousedown', this.handleResizeMouseDown);
@@ -203,24 +199,6 @@ export class AppWindow {
 		this.updateWindowStyle();
 	}
 	
-	handleMinimize(e) {
-		e.stopPropagation();
-		
-		if (!this.isMinimized) {
-			this.isAnimatingMinimize = true;
-			this.updateWindowStyle();
-			
-			setTimeout(() => {
-				this.isMinimized = true;
-				this.isAnimatingMinimize = false;
-				this.updateWindowStyle();
-			}, 500);
-		} else {
-			this.isMinimized = false;
-			this.updateWindowStyle();
-		}
-	}
-	
 	handleMaximize(e) {
 		e.stopPropagation();
 		
@@ -283,7 +261,6 @@ export class AppWindow {
 		element.className = 'app-window';
 		if (this.isActive) element.classList.add('app-window-active');
 		if (this.isMaximized) element.classList.add('app-window-maximized');
-		if (this.isAnimatingMinimize) element.classList.add('app-window-minimizing');
 		
 		// Update position and size
 		element.style.position = 'absolute';
@@ -296,24 +273,16 @@ export class AppWindow {
 		let transform = 'scale(1)';
 		if (this.isDragging) {
 			transform = 'scale(1.01)';
-		} else if (this.isAnimatingMinimize) {
-			const target = this.getTaskbarTarget();
-			transform = `translate(${target.x - this.position.x}px, ${target.y - this.position.y}px) scale(0.05)`;
 		}
 		element.style.transform = transform;
 		
 		// Update z-index
 		element.style.zIndex = this.isActive ? '1000' : '500';
 		
-		// Update opacity
-		element.style.opacity = this.isAnimatingMinimize ? '0' : '1';
-		
 		// Update transition
 		let transition = 'transform 0.2s ease, box-shadow 0.3s ease';
 		if (this.isDragging || this.isResizing) {
 			transition = 'none';
-		} else if (this.isAnimatingMinimize) {
-			transition = 'transform 0.5s ease-in-out, opacity 0.5s ease-in-out, box-shadow 0.5s ease-in-out';
 		}
 		element.style.transition = transition;
 		
@@ -322,9 +291,6 @@ export class AppWindow {
 		if (resizeHandle) {
 			resizeHandle.style.display = this.isMaximized ? 'none' : 'block';
 		}
-		
-		// Show/hide window based on minimized state
-		element.style.display = (this.isMinimized && !this.isAnimatingMinimize) ? 'none' : 'block';
 	}
 	
 	setContent(content) {
@@ -362,19 +328,8 @@ export class AppWindow {
 		}
 	}
 	
-	minimize() {
-		this.handleMinimize({ stopPropagation: () => {} });
-	}
-	
 	maximize() {
 		this.handleMaximize({ stopPropagation: () => {} });
-	}
-	
-	restore() {
-		if (this.isMinimized) {
-			this.isMinimized = false;
-			this.updateWindowStyle();
-		}
 	}
 	
 	destroy() {

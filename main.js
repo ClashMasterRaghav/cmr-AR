@@ -7,6 +7,7 @@ import { AppWindow } from './AppWindow.js';
 let videoPlayer, youtubePlayer;
 let appDrawer;
 let camera, renderer;
+let isInAR = false;
 
 // Initialize the main application
 export function initMain(cameraRef, rendererRef) {
@@ -16,16 +17,43 @@ export function initMain(cameraRef, rendererRef) {
 	// Initialize app instances
 	videoPlayer = null;
 	youtubePlayer = null;
-	
-	// Initialize app drawer
-	appDrawer = new AppDrawer();
+	appDrawer = null;
 	
 	// Listen for app launch events
 	document.addEventListener('appLaunch', handleAppLaunch);
+	
+	// Listen for AR session events
+	renderer.xr.addEventListener('sessionstart', onSessionStart);
+	renderer.xr.addEventListener('sessionend', onSessionEnd);
+}
+
+// Handle AR session start
+function onSessionStart() {
+	console.log('AR session started');
+	isInAR = true;
+	
+	// Create app drawer only when in AR
+	if (!appDrawer) {
+		appDrawer = new AppDrawer();
+	}
+}
+
+// Handle AR session end
+function onSessionEnd() {
+	console.log('AR session ended');
+	isInAR = false;
+	
+	// Clean up app drawer and windows when exiting AR
+	cleanup();
 }
 
 // Handle app launch events from the app drawer
 function handleAppLaunch(event) {
+	if (!isInAR) {
+		console.warn('Cannot launch apps outside of AR mode');
+		return;
+	}
+	
 	const { appId } = event.detail;
 	
 	switch (appId) {

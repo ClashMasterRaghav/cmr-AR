@@ -18,6 +18,7 @@ export class AppDrawer {
 			}
 		];
 		this.createDrawer();
+		console.log('AppDrawer created - should be visible in AR mode');
 	}
 
 	createDrawer() {
@@ -27,6 +28,7 @@ export class AppDrawer {
 		this.floatingButton.innerHTML = '📱';
 		this.floatingButton.addEventListener('click', () => this.toggleDrawer());
 		document.body.appendChild(this.floatingButton);
+		console.log('Floating button created');
 
 		// Create app drawer
 		this.drawerElement = document.createElement('div');
@@ -47,6 +49,7 @@ export class AppDrawer {
 			</div>
 		`;
 		document.body.appendChild(this.drawerElement);
+		console.log('App drawer created');
 
 		// Add event listeners
 		this.drawerElement.querySelector('.close-drawer').addEventListener('click', () => this.closeDrawer());
@@ -55,6 +58,7 @@ export class AppDrawer {
 		this.drawerElement.querySelectorAll('.app-icon').forEach(icon => {
 			icon.addEventListener('click', (e) => {
 				const appId = e.currentTarget.getAttribute('data-app-id');
+				console.log('App icon clicked:', appId);
 				this.launchApp(appId);
 			});
 		});
@@ -79,17 +83,21 @@ export class AppDrawer {
 		this.isOpen = true;
 		this.drawerElement.classList.add('app-drawer-open');
 		this.floatingButton.classList.add('floating-app-button-active');
+		console.log('App drawer opened');
 	}
 
 	closeDrawer() {
 		this.isOpen = false;
 		this.drawerElement.classList.remove('app-drawer-open');
 		this.floatingButton.classList.remove('floating-app-button-active');
+		console.log('App drawer closed');
 	}
 
 	launchApp(appId) {
 		// Close drawer after launching app
 		this.closeDrawer();
+		
+		console.log('Launching app:', appId);
 		
 		// Emit custom event for app launch
 		const event = new CustomEvent('appLaunch', {
@@ -99,6 +107,7 @@ export class AppDrawer {
 	}
 
 	destroy() {
+		console.log('Destroying AppDrawer');
 		if (this.floatingButton) {
 			this.floatingButton.remove();
 		}
