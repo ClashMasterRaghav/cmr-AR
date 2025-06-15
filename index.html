@@ -16,7 +16,7 @@
 			{
 				"imports": {
 					"three": "./build/three.module.js",
-					"three": "./ARButton.js"
+					"three/addons/": "./build/"
 				}
 			}
 		</script>
@@ -24,7 +24,7 @@
 		<script type="module">
 
 			import * as THREE from 'three';
-			import { ARButton } from 'ARButton.js';
+			import { ARButton } from './build/ARButton.js';
 
 			let camera, scene, renderer;
 			let controller;
