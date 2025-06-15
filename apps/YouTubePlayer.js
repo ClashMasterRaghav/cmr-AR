@@ -5,10 +5,14 @@ export class YouTubePlayer {
 		this.window = null;
 	}
 
-	create() {
+	create(camera) {
+		// Calculate position in user's view direction
+		const position = AppWindow.calculateViewPosition(camera, 2);
+		
 		this.window = new AppWindow({
 			id: 'youtube-player',
 			title: 'YouTube Player',
+			position: position,
 			onClose: () => {
 				this.window = null;
 			}

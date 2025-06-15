@@ -5,10 +5,14 @@ export class VideoPlayer {
 		this.window = null;
 	}
 
-	create() {
+	create(camera) {
+		// Calculate position in user's view direction
+		const position = AppWindow.calculateViewPosition(camera, 2);
+		
 		this.window = new AppWindow({
 			id: 'video-player',
 			title: 'Video Player',
+			position: position,
 			onClose: () => {
 				this.window = null;
 			}

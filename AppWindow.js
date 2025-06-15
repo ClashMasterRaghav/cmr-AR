@@ -4,6 +4,7 @@ export class AppWindow {
 		this.id = options.id || 'window-' + Date.now();
 		this.title = options.title || 'Untitled Window';
 		this.onClose = options.onClose || null;
+		this.position = options.position || this.getDefaultPosition();
 		
 		// State variables
 		this.isDragging = false;
@@ -13,25 +14,13 @@ export class AppWindow {
 		this.isActive = false;
 		this.isMinimized = false;
 		
-		// Calculate initial center position
-		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-		const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-		
-		this.position = {
-			x: Math.max(0, (vw - 600) / 2),
-			y: Math.max(0, (vh - 400) / 3)
-		};
-		
 		this.size = { width: 600, height: 400 };
 		this.dragOffset = { x: 0, y: 0 };
 		this.resizeStart = { x: 0, y: 0 };
 		this.initialSize = { width: 0, height: 0 };
 		
 		this.preMaximizeSize = { width: 600, height: 400 };
-		this.preMaximizePosition = {
-			x: Math.max(0, (vw - 600) / 2),
-			y: Math.max(0, (vh - 400) / 3)
-		};
+		this.preMaximizePosition = { ...this.position };
 		
 		// Create the window element
 		this.windowElement = this.createElement();
@@ -48,6 +37,41 @@ export class AppWindow {
 		
 		// Add event listeners
 		this.addEventListeners();
+	}
+	
+	getDefaultPosition() {
+		// Calculate center position
+		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+		const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+		
+		return {
+			x: Math.max(0, (vw - 600) / 2),
+			y: Math.max(0, (vh - 400) / 3)
+		};
+	}
+	
+	// Static method to calculate position in user's view direction
+	static calculateViewPosition(camera, distance = 2) {
+		// Get camera direction
+		const direction = new THREE.Vector3(0, 0, -1);
+		direction.applyQuaternion(camera.quaternion);
+		
+		// Calculate position in front of camera
+		const position = new THREE.Vector3();
+		position.copy(camera.position);
+		position.add(direction.multiplyScalar(distance));
+		
+		// Convert 3D position to screen coordinates
+		const vector = position.clone();
+		vector.project(camera);
+		
+		const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+		const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+		
+		return {
+			x: (vector.x * 0.5 + 0.5) * vw - 300, // Center the window
+			y: (-vector.y * 0.5 + 0.5) * vh - 200
+		};
 	}
 	
 	createElement() {

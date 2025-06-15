@@ -26,12 +26,10 @@
 
 			import * as THREE from 'three';
 			import { ARButton } from './build/ARButton.js';
-			import { VideoPlayer } from './apps/VideoPlayer.js';
-			import { YouTubePlayer } from './apps/YouTubePlayer.js';
+			import { initMain, onSelect, onWindowResize, cleanup } from './main.js';
 
 			let camera, scene, renderer;
 			let controller;
-			let videoPlayer, youtubePlayer;
 
 			init();
 
@@ -69,27 +67,10 @@
 
 				//
 
-				window.addEventListener( 'resize', onWindowResize );
+				window.addEventListener( 'resize', () => onWindowResize(camera, renderer) );
 
-			}
-
-			function onSelect() {
-				// Create apps on tap
-				if (!videoPlayer) {
-					videoPlayer = new VideoPlayer();
-					videoPlayer.create();
-				} else if (!youtubePlayer) {
-					youtubePlayer = new YouTubePlayer();
-					youtubePlayer.create();
-				}
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				// Initialize the main application with camera and renderer references
+				initMain(camera, renderer);
 
 			}
 
