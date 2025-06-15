@@ -24,9 +24,6 @@ export class AppWindow {
 		this.preMaximizeSize = { width: 600, height: 400 };
 		this.preMaximizePosition = { ...this.position };
 		
-		// Create the window element
-		this.windowElement = this.createElement();
-		
 		// Bind event handlers
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -37,7 +34,10 @@ export class AppWindow {
 		this.handleWindowClick = this.handleWindowClick.bind(this);
 		this.handleHeaderDoubleClick = this.handleHeaderDoubleClick.bind(this);
 		
-		// Add event listeners
+		// Create the window element
+		this.windowElement = this.createElement();
+		
+		// Add event listeners after element is created
 		this.addEventListeners();
 	}
 	
@@ -100,8 +100,21 @@ export class AppWindow {
 			</div>
 		`;
 		
-		this.updateWindowStyle();
+		// Set initial styles directly instead of calling updateWindowStyle
+		this.setInitialStyles(windowDiv);
+		
 		return windowDiv;
+	}
+	
+	setInitialStyles(element) {
+		// Set initial position and size
+		element.style.position = 'absolute';
+		element.style.left = `${this.position.x}px`;
+		element.style.top = `${this.position.y}px`;
+		element.style.width = `${this.size.width}px`;
+		element.style.height = `${this.size.height}px`;
+		element.style.zIndex = '500';
+		element.style.transition = 'transform 0.2s ease, box-shadow 0.3s ease';
 	}
 	
 	addEventListeners() {
@@ -258,6 +271,12 @@ export class AppWindow {
 	}
 	
 	updateWindowStyle() {
+		// Safety check to ensure windowElement exists
+		if (!this.windowElement) {
+			console.warn('Window element not found in updateWindowStyle');
+			return;
+		}
+		
 		const element = this.windowElement;
 		
 		// Update classes
@@ -309,6 +328,11 @@ export class AppWindow {
 	}
 	
 	setContent(content) {
+		if (!this.windowElement) {
+			console.warn('Window element not found in setContent');
+			return;
+		}
+		
 		const contentDiv = this.windowElement.querySelector('.app-window-content');
 		if (typeof content === 'string') {
 			contentDiv.innerHTML = content;
@@ -319,6 +343,11 @@ export class AppWindow {
 	}
 	
 	appendTo(parent) {
+		if (!this.windowElement) {
+			console.warn('Window element not found in appendTo');
+			return;
+		}
+		
 		parent.appendChild(this.windowElement);
 		this.setActive();
 	}
@@ -327,7 +356,10 @@ export class AppWindow {
 		if (this.onClose) {
 			this.onClose();
 		}
-		this.windowElement.remove();
+		if (this.windowElement) {
+			this.windowElement.remove();
+			this.windowElement = null;
+		}
 	}
 	
 	minimize() {
@@ -348,6 +380,9 @@ export class AppWindow {
 	destroy() {
 		window.removeEventListener('mousemove', this.handleMouseMove);
 		window.removeEventListener('mouseup', this.handleMouseUp);
-		this.windowElement.remove();
+		if (this.windowElement) {
+			this.windowElement.remove();
+			this.windowElement = null;
+		}
 	}
 } 
