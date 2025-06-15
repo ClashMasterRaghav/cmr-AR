@@ -27,40 +27,6 @@ export function initMain(cameraRef, rendererRef) {
 	renderer.xr.addEventListener('sessionend', onSessionEnd);
 	
 	console.log('Main initialized, waiting for AR session...');
-	
-	// Create a test button to verify positioning
-	createTestButton();
-}
-
-// Create a test button to verify positioning
-function createTestButton() {
-	const testButton = document.createElement('div');
-	testButton.innerHTML = '🧪 TEST';
-	testButton.style.cssText = `
-		position: fixed !important;
-		top: 100px !important;
-		right: 20px !important;
-		width: 80px !important;
-		height: 40px !important;
-		background: red !important;
-		color: white !important;
-		border-radius: 8px !important;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-		font-size: 12px !important;
-		cursor: pointer !important;
-		z-index: 999999 !important;
-		pointer-events: auto !important;
-	`;
-	
-	testButton.addEventListener('click', () => {
-		console.log('Test button clicked!');
-		alert('Test button works! If you can see this, positioning is fine.');
-	});
-	
-	document.body.appendChild(testButton);
-	console.log('Test button created');
 }
 
 // Handle AR session start
@@ -68,52 +34,147 @@ function onSessionStart() {
 	console.log('AR session started - creating app drawer');
 	isInAR = true;
 	
-	// Create app drawer when in AR
-	if (!appDrawer) {
-		appDrawer = new AppDrawer();
-		console.log('App drawer should now be visible in AR');
-	}
-	
-	// Force a small delay to ensure AR is fully initialized
+	// Wait a bit for AR session to fully initialize
 	setTimeout(() => {
-		if (appDrawer && !appDrawer.floatingButton) {
-			console.log('Recreating app drawer due to missing floating button');
-			appDrawer.destroy();
-			appDrawer = new AppDrawer();
-		}
-		
-		// Check if floating button exists and is visible
-		const floatingButton = document.querySelector('.floating-app-button');
-		if (floatingButton) {
-			console.log('✅ Floating button exists in DOM');
-			const rect = floatingButton.getBoundingClientRect();
-			console.log('Button rect:', rect);
-			console.log('Button visible:', rect.width > 0 && rect.height > 0);
-			console.log('Button style:', window.getComputedStyle(floatingButton));
+		createARUI();
+	}, 500);
+}
+
+// Create UI elements specifically for AR mode
+function createARUI() {
+	console.log('Creating AR UI elements...');
+	
+	// Create floating button directly in body
+	const floatingButton = document.createElement('div');
+	floatingButton.id = 'ar-floating-button';
+	floatingButton.innerHTML = '📱';
+	floatingButton.style.cssText = `
+		position: fixed !important;
+		top: 20px !important;
+		right: 20px !important;
+		width: 60px !important;
+		height: 60px !important;
+		background: rgba(79, 195, 247, 0.95) !important;
+		border-radius: 50% !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		font-size: 24px !important;
+		cursor: pointer !important;
+		pointer-events: auto !important;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+		transition: all 0.3s ease !important;
+		backdrop-filter: blur(10px) !important;
+		border: 2px solid rgba(255, 255, 255, 0.3) !important;
+		user-select: none !important;
+		-webkit-user-select: none !important;
+		-moz-user-select: none !important;
+		-ms-user-select: none !important;
+		z-index: 999999 !important;
+	`;
+	document.body.appendChild(floatingButton);
+	
+	// Create app drawer
+	const appDrawer = document.createElement('div');
+	appDrawer.id = 'ar-app-drawer';
+	appDrawer.style.cssText = `
+		position: fixed !important;
+		top: 0 !important;
+		right: -400px !important;
+		width: 380px !important;
+		height: 100vh !important;
+		background: rgba(40, 40, 40, 0.95) !important;
+		backdrop-filter: blur(20px) !important;
+		border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+		transition: right 0.3s ease !important;
+		overflow-y: auto !important;
+		pointer-events: auto !important;
+		user-select: none !important;
+		-webkit-user-select: none !important;
+		-moz-user-select: none !important;
+		-ms-user-select: none !important;
+		z-index: 999998 !important;
+	`;
+	
+	appDrawer.innerHTML = `
+		<div style="display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: rgba(30, 30, 30, 0.8);">
+			<h3 style="margin: 0; font-size: 20px; font-weight: 600; color: #ffffff;">Apps</h3>
+			<button id="close-drawer" style="background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease;">×</button>
+		</div>
+		<div style="padding: 20px;">
+			<div class="app-icon" data-app-id="video-player" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+				<div style="font-size: 32px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(79, 195, 247, 0.1); border-radius: 10px; border: 1px solid rgba(79, 195, 247, 0.2);">🎬</div>
+				<div>
+					<div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">Video Player</div>
+					<div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); line-height: 1.4;">Play local video files</div>
+				</div>
+			</div>
+			<div class="app-icon" data-app-id="youtube-player" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 15px;">
+				<div style="font-size: 32px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(79, 195, 247, 0.1); border-radius: 10px; border: 1px solid rgba(79, 195, 247, 0.2);">📺</div>
+				<div>
+					<div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">YouTube</div>
+					<div style="font-size: 12px; color: rgba(255, 255, 255, 0.6); line-height: 1.4;">Watch YouTube videos</div>
+				</div>
+			</div>
+		</div>
+	`;
+	document.body.appendChild(appDrawer);
+	
+	// Add event listeners
+	let isDrawerOpen = false;
+	
+	floatingButton.addEventListener('click', () => {
+		console.log('AR floating button clicked!');
+		if (isDrawerOpen) {
+			appDrawer.style.right = '-400px !important';
+			floatingButton.style.background = 'rgba(79, 195, 247, 0.95) !important';
 		} else {
-			console.log('❌ Floating button not found in DOM');
+			appDrawer.style.right = '0px !important';
+			floatingButton.style.background = 'rgba(76, 175, 80, 0.95) !important';
 		}
-	}, 1000);
+		isDrawerOpen = !isDrawerOpen;
+	});
+	
+	document.getElementById('close-drawer').addEventListener('click', () => {
+		appDrawer.style.right = '-400px !important';
+		floatingButton.style.background = 'rgba(79, 195, 247, 0.95) !important';
+		isDrawerOpen = false;
+	});
+	
+	// Add click listeners to app icons
+	appDrawer.querySelectorAll('.app-icon').forEach(icon => {
+		icon.addEventListener('click', (e) => {
+			const appId = e.currentTarget.getAttribute('data-app-id');
+			console.log('AR app icon clicked:', appId);
+			
+			// Close drawer
+			appDrawer.style.right = '-400px !important';
+			floatingButton.style.background = 'rgba(79, 195, 247, 0.95) !important';
+			isDrawerOpen = false;
+			
+			// Launch app
+			launchApp(appId);
+		});
+	});
+	
+	console.log('AR UI elements created successfully');
+	
+	// Verify elements are visible
+	setTimeout(() => {
+		const button = document.getElementById('ar-floating-button');
+		if (button) {
+			console.log('✅ AR floating button found in DOM');
+			const rect = button.getBoundingClientRect();
+			console.log('Button rect:', rect);
+		} else {
+			console.log('❌ AR floating button not found in DOM');
+		}
+	}, 100);
 }
 
-// Handle AR session end
-function onSessionEnd() {
-	console.log('AR session ended - cleaning up');
-	isInAR = false;
-	
-	// Clean up app drawer and windows when exiting AR
-	cleanup();
-}
-
-// Handle app launch events from the app drawer
-function handleAppLaunch(event) {
-	if (!isInAR) {
-		console.warn('Cannot launch apps outside of AR mode');
-		return;
-	}
-	
-	const { appId } = event.detail;
-	console.log('Handling app launch for:', appId);
+// Launch app function
+function launchApp(appId) {
+	console.log('Launching AR app:', appId);
 	
 	switch (appId) {
 		case 'video-player':
@@ -131,6 +192,38 @@ function handleAppLaunch(event) {
 			}
 			break;
 	}
+}
+
+// Handle AR session end
+function onSessionEnd() {
+	console.log('AR session ended - cleaning up');
+	isInAR = false;
+	
+	// Clean up AR UI elements
+	const floatingButton = document.getElementById('ar-floating-button');
+	if (floatingButton) {
+		floatingButton.remove();
+	}
+	
+	const appDrawer = document.getElementById('ar-app-drawer');
+	if (appDrawer) {
+		appDrawer.remove();
+	}
+	
+	// Clean up app drawer and windows when exiting AR
+	cleanup();
+}
+
+// Handle app launch events from the app drawer
+function handleAppLaunch(event) {
+	if (!isInAR) {
+		console.warn('Cannot launch apps outside of AR mode');
+		return;
+	}
+	
+	const { appId } = event.detail;
+	console.log('Handling app launch for:', appId);
+	launchApp(appId);
 }
 
 // Handle AR controller select events (legacy support)

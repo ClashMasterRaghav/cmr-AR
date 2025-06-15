@@ -57,7 +57,9 @@
 
 				//
 
-				const arButton = ARButton.createButton( renderer );
+				const arButton = ARButton.createButton( renderer, {
+					domOverlay: { root: document.body }
+				} );
 				document.body.appendChild( arButton );
 
 				// Add click listener to AR button to ensure app drawer is created
