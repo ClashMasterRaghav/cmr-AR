@@ -1,0 +1,247 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	background: #1a1a1a;
+	color: #ffffff;
+	overflow: hidden;
+}
+
+#info {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 100;
+	background: rgba(0, 0, 0, 0.7);
+	padding: 10px;
+	border-radius: 5px;
+	font-size: 14px;
+}
+
+#info a {
+	color: #4fc3f7;
+	text-decoration: none;
+}
+
+.app-window {
+	background: rgba(40, 40, 40, 0.95);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	backdrop-filter: blur(10px);
+	overflow: hidden;
+	position: absolute;
+	z-index: 500;
+	transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.app-window-active {
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(79, 195, 247, 0.3);
+	z-index: 1000;
+}
+
+.app-window-maximized {
+	border-radius: 0;
+}
+
+.app-window-minimizing {
+	transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+.app-window-header {
+	background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	padding: 8px 12px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: move;
+	user-select: none;
+	height: 30px;
+	box-sizing: border-box;
+}
+
+.app-window-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 500;
+	color: #ffffff;
+	flex: 1;
+}
+
+.app-window-controls {
+	display: flex;
+	gap: 4px;
+}
+
+.app-window-controls button {
+	background: none;
+	border: none;
+	color: #ffffff;
+	width: 20px;
+	height: 20px;
+	border-radius: 3px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	transition: background-color 0.2s ease;
+}
+
+.app-window-controls button:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.app-window-minimize:hover {
+	background: rgba(255, 193, 7, 0.2);
+}
+
+.app-window-maximize:hover {
+	background: rgba(76, 175, 80, 0.2);
+}
+
+.app-window-close:hover {
+	background: rgba(244, 67, 54, 0.2);
+}
+
+.app-window-content {
+	background: rgba(30, 30, 30, 0.9);
+	height: calc(100% - 30px);
+	overflow: hidden;
+	position: relative;
+}
+
+.resize-handle {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 15px;
+	height: 15px;
+	cursor: nw-resize;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.resize-handle svg {
+	width: 10px;
+	height: 10px;
+}
+
+.video-player {
+	width: 100%;
+	height: 100%;
+	background: #000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.video-player video {
+	max-width: 100%;
+	max-height: 80%;
+	border-radius: 4px;
+}
+
+.video-controls {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.video-controls button {
+	background: rgba(79, 195, 247, 0.2);
+	border: 1px solid rgba(79, 195, 247, 0.3);
+	color: #ffffff;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.video-controls button:hover {
+	background: rgba(79, 195, 247, 0.3);
+}
+
+.video-controls input[type="file"] {
+	display: none;
+}
+
+.video-controls label {
+	background: rgba(76, 175, 80, 0.2);
+	border: 1px solid rgba(76, 175, 80, 0.3);
+	color: #ffffff;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.video-controls label:hover {
+	background: rgba(76, 175, 80, 0.3);
+}
+
+.youtube-player {
+	width: 100%;
+	height: 100%;
+	background: #000;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.youtube-input {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.youtube-input input {
+	flex: 1;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	color: #ffffff;
+	padding: 10px;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.youtube-input input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.youtube-input button {
+	background: rgba(244, 67, 54, 0.2);
+	border: 1px solid rgba(244, 67, 54, 0.3);
+	color: #ffffff;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.youtube-input button:hover {
+	background: rgba(244, 67, 54, 0.3);
+}
+
+.youtube-iframe {
+	flex: 1;
+	border: none;
+	border-radius: 4px;
+	background: #000;
+}
+
+.youtube-placeholder {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 16px;
+	text-align: center;
+} 
