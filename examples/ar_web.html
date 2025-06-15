@@ -122,7 +122,66 @@
 			}
 		</script>
 
-		<!-- Bundled AR Application -->
-		<script type="module" src="dist/ar_bundle.js"></script>
+		<!-- Bundled AR Application with Error Handling -->
+		<script type="module">
+			// Add comprehensive error handling
+			window.addEventListener('error', function(e) {
+				console.error('Global error:', e.error);
+				showError(`Application Error: ${e.error.message}`);
+			});
+
+			window.addEventListener('unhandledrejection', function(e) {
+				console.error('Unhandled promise rejection:', e.reason);
+				showError(`Promise Error: ${e.reason}`);
+			});
+
+			function showError(message) {
+				const loadingMessage = document.getElementById('loadingMessage');
+				const errorMessage = document.getElementById('errorMessage');
+				
+				if (loadingMessage) {
+					loadingMessage.style.display = 'none';
+				}
+				
+				if (errorMessage) {
+					errorMessage.innerHTML = `
+						<h2>Application Error</h2>
+						<p>${message}</p>
+						<p>Please check the console for more details or try refreshing the page.</p>
+					`;
+					errorMessage.style.display = 'block';
+				}
+			}
+
+			// Try to load the bundle with fallback
+			async function loadApplication() {
+				try {
+					console.log('Loading AR application...');
+					
+					// First try the bundled version
+					const module = await import('./dist/ar_bundle.js');
+					console.log('Bundle loaded successfully');
+					
+				} catch (error) {
+					console.error('Failed to load bundle:', error);
+					
+					// Try alternative paths for GitHub Pages
+					try {
+						const module = await import('/cmr-AR/examples/dist/ar_bundle.js');
+						console.log('Bundle loaded with absolute path');
+					} catch (error2) {
+						console.error('Failed to load with absolute path:', error2);
+						showError(`Failed to load application: ${error.message}. Please ensure all files are properly deployed.`);
+					}
+				}
+			}
+
+			// Start loading when DOM is ready
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', loadApplication);
+			} else {
+				loadApplication();
+			}
+		</script>
 	</body>
 </html>
