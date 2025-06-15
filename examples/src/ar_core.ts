@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { ARButton } from 'three/addons/webxr/ARButton.js';
-import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+import { ARButton } from '../jsm/webxr/ARButton.js';
+import { XRControllerModelFactory } from '../jsm/webxr/XRControllerModelFactory.js';
 import { ARCore } from './types';
 
 export class ARCoreImpl implements ARCore {

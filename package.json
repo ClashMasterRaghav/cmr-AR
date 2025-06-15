@@ -4,16 +4,16 @@
   "description": "AR Windows 7 Style Apps with TypeScript",
   "main": "examples/dist/ar_main.js",
   "scripts": {
-    "build": "tsc",
-    "bundle": "node build-bundle.js",
-    "build:gh": "tsc && npm run bundle",
-    "watch": "tsc --watch",
-    "dev": "tsc && python -m http.server 8000",
+    "build": "vite build",
+    "build:gh": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
     "serve": "python -m http.server 8000"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "@types/three": "^0.160.0"
+    "@types/three": "^0.160.0",
+    "vite": "^5.0.0"
   },
   "dependencies": {
     "three": "^0.160.0"
