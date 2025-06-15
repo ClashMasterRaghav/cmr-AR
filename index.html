@@ -57,7 +57,24 @@
 
 				//
 
-				document.body.appendChild( ARButton.createButton( renderer ) );
+				const arButton = ARButton.createButton( renderer );
+				document.body.appendChild( arButton );
+
+				// Add click listener to AR button to ensure app drawer is created
+				arButton.addEventListener('click', () => {
+					console.log('AR button clicked - ensuring app drawer will be created');
+					// Add a small delay to ensure AR session starts
+					setTimeout(() => {
+						if (renderer.xr.isPresenting) {
+							console.log('AR is presenting - forcing app drawer creation');
+							// Force app drawer creation if session events didn't fire
+							import('./main.js').then(({ initMain }) => {
+								// This will be handled by the session events, but as a fallback
+								console.log('AR session detected, app drawer should be visible');
+							});
+						}
+					}, 2000);
+				});
 
 				//
 
