@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 // AppWindow Class for AR Applications
 export class AppWindow {
 	constructor(options = {}) {
