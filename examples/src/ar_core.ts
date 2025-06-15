@@ -7,12 +7,12 @@ export class ARCoreImpl implements ARCore {
     public scene: THREE.Scene;
     public camera: THREE.PerspectiveCamera;
     public renderer: THREE.WebGLRenderer;
-    public controller: THREE.XRTargetRaySpace;
-    public controllerGrip: THREE.XRGripSpace;
+    public controller!: THREE.XRTargetRaySpace;
+    public controllerGrip!: THREE.XRGripSpace;
     public isARMode: boolean = false;
     private container: HTMLDivElement;
-    private pointer: THREE.Mesh;
-    private light: THREE.HemisphereLight;
+    private pointer!: THREE.Mesh;
+    private light!: THREE.HemisphereLight;
 
     constructor() {
         this.scene = new THREE.Scene();

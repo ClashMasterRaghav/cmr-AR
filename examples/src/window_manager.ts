@@ -163,13 +163,15 @@ export class WindowManagerImpl implements WindowManager {
         window.isSelected = true;
         
         // Visual feedback for selection
-        window.headerMesh.material.color.setHex(0x5cb85c);
+        const headerMaterial = window.headerMesh.material as THREE.MeshBasicMaterial;
+        headerMaterial.color.setHex(0x5cb85c);
     }
 
     public deselectAll(): void {
         this.windows.forEach(window => {
             window.isSelected = false;
-            window.headerMesh.material.color.setHex(0x4a90e2);
+            const headerMaterial = window.headerMesh.material as THREE.MeshBasicMaterial;
+            headerMaterial.color.setHex(0x4a90e2);
         });
     }
 

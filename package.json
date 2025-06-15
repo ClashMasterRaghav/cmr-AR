@@ -1,0 +1,28 @@
+{
+  "name": "cmr-ar",
+  "version": "1.0.0",
+  "description": "AR Windows 7 Style Apps with TypeScript",
+  "main": "examples/dist/ar_main.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "dev": "tsc && python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/three": "^0.160.0"
+  },
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "keywords": [
+    "ar",
+    "webxr",
+    "threejs",
+    "typescript",
+    "augmented-reality"
+  ],
+  "author": "",
+  "license": "MIT"
+} 

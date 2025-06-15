@@ -15,7 +15,7 @@ export class MediaPlayerImpl implements MediaPlayer {
         this.texture = new THREE.VideoTexture(this.videoElement);
         this.texture.minFilter = THREE.LinearFilter;
         this.texture.magFilter = THREE.LinearFilter;
-        this.texture.format = THREE.RGBFormat;
+        this.texture.format = THREE.RGBAFormat;
     }
 
     private setupVideo(): void {
