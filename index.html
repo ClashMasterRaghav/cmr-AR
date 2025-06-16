@@ -1,118 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>AR Apps - Video Player & YouTube</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<link type="text/css" rel="stylesheet" href="main.css">
-		<link type="text/css" rel="stylesheet" href="styles.css">
-	</head>
-	<body>
-
-		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> AR Apps - Video Player & YouTube<br/>(Chrome Android 81+)
-		</div>
-
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "./build/three.module.js",
-					"three/addons/": "./build/"
-				}
-			}
-		</script>
-
-		<script type="module">
-
-			import * as THREE from 'three';
-			import { ARButton } from './build/ARButton.js';
-			import { initMain, onSelect, onWindowResize, cleanup } from './main.js';
-
-			let camera, scene, renderer;
-			let controller;
-
-			init();
-
-			function init() {
-
-				const container = document.createElement( 'div' );
-				document.body.appendChild( container );
-
-				scene = new THREE.Scene();
-
-				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
-
-				const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
-				light.position.set( 0.5, 1, 0.25 );
-				scene.add( light );
-
-				//
-
-				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.setAnimationLoop( animate );
-				renderer.xr.enabled = true;
-				container.appendChild( renderer.domElement );
-
-				//
-
-				// Create a container for AR UI elements
-				const arUIContainer = document.createElement('div');
-				arUIContainer.id = 'ar-ui-container';
-				arUIContainer.style.cssText = `
-					position: fixed;
-					top: 0;
-					left: 0;
-					width: 100vw;
-					height: 100vh;
-					pointer-events: none;
-					z-index: 999999;
-				`;
-				document.body.appendChild(arUIContainer);
-
-				const arButton = ARButton.createButton( renderer, {
-					domOverlay: { root: arUIContainer }
-				} );
-				document.body.appendChild( arButton );
-
-				// Add click listener to AR button to ensure app drawer is created
-				arButton.addEventListener('click', () => {
-					console.log('AR button clicked - ensuring app drawer will be created');
-					// Add a small delay to ensure AR session starts
-					setTimeout(() => {
-						if (renderer.xr.isPresenting) {
-							console.log('AR is presenting - forcing app drawer creation');
-							// Force app drawer creation if session events didn't fire
-							import('./main.js').then(({ initMain }) => {
-								// This will be handled by the session events, but as a fallback
-								console.log('AR session detected, app drawer should be visible');
-							});
-						}
-					}, 2000);
-				});
-
-				//
-
-				controller = renderer.xr.getController( 0 );
-				controller.addEventListener( 'select', onSelect );
-				scene.add( controller );
-
-				//
-
-				window.addEventListener( 'resize', () => onWindowResize(camera, renderer) );
-
-				// Initialize the main application with camera and renderer references
-				initMain(camera, renderer);
-
-			}
-
-			function animate() {
-
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=examples/ar_web.html">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <p>If you are not redirected, <a href="examples/ar_web.html">click here</a>.</p>
+</body>
 </html>
